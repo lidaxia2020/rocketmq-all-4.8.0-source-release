@@ -96,8 +96,10 @@ public class DefaultRequestProcessor extends AsyncNettyRequestProcessor implemen
                 } else {
                     return this.registerBroker(ctx, request);
                 }
+            //路由删除
             case RequestCode.UNREGISTER_BROKER:
                 return this.unregisterBroker(ctx, request);
+            // 路由发现
             case RequestCode.GET_ROUTEINFO_BY_TOPIC:
                 return this.getRouteInfoByTopic(ctx, request);
             case RequestCode.GET_BROKER_CLUSTER_INFO:
