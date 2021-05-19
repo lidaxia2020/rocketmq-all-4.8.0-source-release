@@ -62,6 +62,14 @@ public class ClientConfig {
 
     private LanguageCode language = LanguageCode.JAVA;
 
+    /**
+     * 创建 MQClientlnstance实例。 整个NM实例中只存在一个 MQClientManager 实
+     * 例，维护一个 MQClientlnstance 缓存表 ConcurrentMap<String／*Clientld 灯， MQClientinstanc
+     * factoryTable =new ConcurrentHashMap<String, MQClientlnstance＞（）， 也就是同一个clientld只
+     * 会创建一个 MQClientinstanc巳。
+     *   ip@instanceName(@unitName)
+     * @return
+     */
     public String buildMQClientId() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getClientIP());

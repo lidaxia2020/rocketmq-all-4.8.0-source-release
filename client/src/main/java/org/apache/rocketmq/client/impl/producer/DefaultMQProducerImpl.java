@@ -180,14 +180,27 @@ public class DefaultMQProducerImpl implements MQProducerInner {
             case CREATE_JUST:
                 this.serviceState = ServiceState.START_FAILED;
 
+                /**
+                 * 检查 productGroup 是否符合要求；
+                 */
                 this.checkConfig();
 
+                /**
+                 * 改变生产者 的 instanceName 为进程 ID
+                 */
                 if (!this.defaultMQProducer.getProducerGroup().equals(MixAll.CLIENT_INNER_PRODUCER_GROUP)) {
                     this.defaultMQProducer.changeInstanceNameToPID();
                 }
 
+                /**
+                 * 获取 MQClientInstance
+                 */
                 this.mQClientFactory = MQClientManager.getInstance().getOrCreateMQClientInstance(this.defaultMQProducer, rpcHook);
 
+                /**
+                 * 向 MQClientlnstance 注册，将 当前生产者加入到 MQClientlnstance 管理中，方
+                 * 便后续调用网络请求、进行心跳检测等
+                 */
                 boolean registerOK = mQClientFactory.registerProducer(this.defaultMQProducer.getProducerGroup(), this);
                 if (!registerOK) {
                     this.serviceState = ServiceState.CREATE_JUST;
@@ -199,6 +212,10 @@ public class DefaultMQProducerImpl implements MQProducerInner {
                 this.topicPublishInfoTable.put(this.defaultMQProducer.getCreateTopicKey(), new TopicPublishInfo());
 
                 if (startFactory) {
+                    /**
+                     * 启动 MQClientlnstance，如果 MQCLientlnstance 已经启动，则本次启动不会真
+                     * 正执行。
+                     */
                     mQClientFactory.start();
                 }
 

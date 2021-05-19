@@ -227,7 +227,10 @@ public class MQClientInstance {
             switch (this.serviceState) {
                 case CREATE_JUST:
                     this.serviceState = ServiceState.START_FAILED;
-                    // If not specified,looking address from name server
+                    /**
+                     * If not specified,looking address from name server
+                     * 如果未指定，请从名称服务器查找地址
+                     */
                     if (null == this.clientConfig.getNamesrvAddr()) {
                         this.mQClientAPIImpl.fetchNameServerAddr();
                     }

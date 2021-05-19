@@ -63,6 +63,8 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     protected final transient DefaultMQProducerImpl defaultMQProducerImpl;
     private final InternalLogger log = ClientLogger.getLog();
     /**
+     * 生产者所属组，消息服务器在回查事务状态时会随机选择该组中任何一
+     * 个生产者发起事务回查请求
      * Producer group conceptually aggregates all producer instances of exactly same role, which is particularly
      * important when transactional messages are involved. </p>
      *
@@ -73,26 +75,31 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private String producerGroup;
 
     /**
+     * 默认 topicKey
      * Just for testing or demo program
      */
     private String createTopicKey = TopicValidator.AUTO_CREATE_TOPIC_KEY_TOPIC;
 
     /**
+     * 默认主题在每一个 Broker 队列数量
      * Number of queues to create per default topic.
      */
     private volatile int defaultTopicQueueNums = 4;
 
     /**
+     * 发送消息默认超时时间， 默认 3s
      * Timeout for sending messages.
      */
     private int sendMsgTimeout = 3000;
 
     /**
+     * 消息体超过该值则启用压缩，默认 4K
      * Compress message body threshold, namely, message body larger than 4k will be compressed on default.
      */
     private int compressMsgBodyOverHowmuch = 1024 * 4;
 
     /**
+     * 同 步方式发送消息重试次数，默认为 2 ，总共执行 3 次 。
      * Maximum number of retry to perform internally before claiming sending failure in synchronous mode. </p>
      *
      * This may potentially cause message duplication which is up to application developers to resolve.
@@ -100,6 +107,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private int retryTimesWhenSendFailed = 2;
 
     /**
+     * 异步方式发送消息重试次数，默认为 2
      * Maximum number of retry to perform internally before claiming sending failure in asynchronous mode. </p>
      *
      * This may potentially cause message duplication which is up to application developers to resolve.
@@ -107,11 +115,14 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private int retryTimesWhenSendAsyncFailed = 2;
 
     /**
+     * 消息重试时选择另外一个 Broker 时 是否不等
+     * 待存储结果就返回 ， 默认为 false 。
      * Indicate whether to retry another broker on sending failure internally.
      */
     private boolean retryAnotherBrokerWhenNotStoreOK = false;
 
     /**
+     * 允许发送的最大消息长度，默认为 4M ，该值最大值为 2 " 32-1 。
      * Maximum allowed message size in bytes.
      */
     private int maxMessageSize = 1024 * 1024 * 4; // 4M

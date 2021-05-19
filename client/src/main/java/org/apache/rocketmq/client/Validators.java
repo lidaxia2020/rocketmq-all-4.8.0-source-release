@@ -48,6 +48,17 @@ public class Validators {
     }
 
     /**
+     * @return <tt>true</tt> if, and only if, the entire origin sequence matches this matcher's pattern
+     */
+    public static boolean regularExpressionMatcher(String origin, Pattern pattern) {
+        if (pattern == null) {
+            return true;
+        }
+        Matcher matcher = pattern.matcher(origin);
+        return matcher.matches();
+    }
+
+    /**
      * Validate group
      */
     public static void checkGroup(String group) throws MQClientException {
@@ -61,21 +72,10 @@ public class Validators {
 
         if (!regularExpressionMatcher(group, PATTERN)) {
             throw new MQClientException(String.format(
-                "the specified group[%s] contains illegal characters, allowing only %s", group,
-                VALID_PATTERN_STR), null);
+                    "the specified group[%s] contains illegal characters, allowing only %s", group,
+                    VALID_PATTERN_STR), null);
         }
 
-    }
-
-    /**
-     * @return <tt>true</tt> if, and only if, the entire origin sequence matches this matcher's pattern
-     */
-    public static boolean regularExpressionMatcher(String origin, Pattern pattern) {
-        if (pattern == null) {
-            return true;
-        }
-        Matcher matcher = pattern.matcher(origin);
-        return matcher.matches();
     }
 
     public static void checkMessage(Message msg, DefaultMQProducer defaultMQProducer)
