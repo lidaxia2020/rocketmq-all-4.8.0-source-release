@@ -81,6 +81,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
     private final Timer timer = new Timer("ClientHouseKeepingService", true);
 
+    /**
+     * AtomicReference类 提供了一种读和写都是原子性的对象引用变量  保证你在修改对象引用时的线程安全性
+     */
     private final AtomicReference<List<String>> namesrvAddrList = new AtomicReference<List<String>>();
     private final AtomicReference<String> namesrvAddrChoosed = new AtomicReference<String>();
     private final AtomicInteger namesrvIndex = new AtomicInteger(initValueIndex());
@@ -89,6 +92,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ExecutorService publicExecutor;
 
     /**
+     * 处理响应时调用此执行器中的回调方法。
      * Invoke the callback methods in this executor when process response.
      */
     private ExecutorService callbackExecutor;
@@ -351,7 +355,11 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             }
 
             if (update) {
+                /**
+                 * 使用默认随机源对列表进行置换，所有置换发生的可能性都是大致相等的
+                 */
                 Collections.shuffle(addrs);
+
                 log.info("name server address updated. NEW : {} , OLD: {}", addrs, old);
                 this.namesrvAddrList.set(addrs);
 

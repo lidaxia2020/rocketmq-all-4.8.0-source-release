@@ -128,6 +128,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private int maxMessageSize = 1024 * 1024 * 4; // 4M
 
     /**
+     * 异步传输数据的界面
      * Interface of asynchronous transfer data
      */
     private TraceDispatcher traceDispatcher = null;
@@ -314,6 +315,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     }
 
     /**
+     * 同步消息发送入口 默认超时时间为 3s
      * Send message in synchronous mode. This method returns only when the sending procedure totally completes. </p>
      *
      * <strong>Warn:</strong> this method has internal retry-mechanism, that is, internal implementation will retry
@@ -331,6 +333,11 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     @Override
     public SendResult send(
         Message msg) throws MQClientException, RemotingException, MQBrokerException, InterruptedException {
+        /**
+         * 消息长度验证
+         * 主题名称 、 消息体不能为空 、 消息长度不能等于 0 且默认不能超过允许
+         * 发送消息的最大长度 4M
+         */
         Validators.checkMessage(msg, this);
         msg.setTopic(withNamespace(msg.getTopic()));
         return this.defaultMQProducerImpl.send(msg);
