@@ -1292,6 +1292,7 @@ public class CommitLog {
         private long lastFlushTimestamp = 0;
         private long printTimes = 0;
 
+        @Override
         public void run() {
             CommitLog.log.info(this.getServiceName() + " service started");
 
@@ -1427,6 +1428,7 @@ public class CommitLog {
                         // two times the flush
                         boolean flushOK = CommitLog.this.mappedFileQueue.getFlushedWhere() >= req.getNextOffset();
                         for (int i = 0; i < 2 && !flushOK; i++) {
+                            //最终调用了CommitLog.this.mappedFileQueue.flush(0) 来进行刷盘
                             CommitLog.this.mappedFileQueue.flush(0);
                             flushOK = CommitLog.this.mappedFileQueue.getFlushedWhere() >= req.getNextOffset();
                         }
@@ -1448,6 +1450,7 @@ public class CommitLog {
             }
         }
 
+        @Override
         public void run() {
             CommitLog.log.info(this.getServiceName() + " service started");
 
@@ -1518,8 +1521,9 @@ public class CommitLog {
             return msgStoreItemMemory;
         }
 
+        @Override
         public AppendMessageResult doAppend(final long fileFromOffset, final ByteBuffer byteBuffer, final int maxBlank,
-            final MessageExtBrokerInner msgInner) {
+                                            final MessageExtBrokerInner msgInner) {
             // STORETIMESTAMP + STOREHOSTADDRESS + OFFSET <br>
 
             // PHY OFFSET
@@ -1675,8 +1679,9 @@ public class CommitLog {
             return result;
         }
 
+        @Override
         public AppendMessageResult doAppend(final long fileFromOffset, final ByteBuffer byteBuffer, final int maxBlank,
-            final MessageExtBatch messageExtBatch) {
+                                            final MessageExtBatch messageExtBatch) {
             byteBuffer.mark();
             //physical offset
             long wroteOffset = fileFromOffset + byteBuffer.position();

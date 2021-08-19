@@ -95,6 +95,7 @@ public class MappedFile extends ReferenceResource {
 
     private static Object invoke(final Object target, final String methodName, final Class<?>... args) {
         return AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            @Override
             public Object run() {
                 try {
                     Method method = method(target, methodName, args);
@@ -127,10 +128,11 @@ public class MappedFile extends ReferenceResource {
         }
 
         ByteBuffer viewedBuffer = (ByteBuffer) invoke(buffer, methodName);
-        if (viewedBuffer == null)
+        if (viewedBuffer == null) {
             return buffer;
-        else
+        } else {
             return viewed(viewedBuffer);
+        }
     }
 
     public static int getTotalMappedFiles() {
@@ -225,6 +227,11 @@ public class MappedFile extends ReferenceResource {
         return this.fileFromOffset;
     }
 
+    /**
+     * 写入文本
+     * @param data
+     * @return
+     */
     public boolean appendMessage(final byte[] data) {
         int currentPos = this.wrotePosition.get();
 

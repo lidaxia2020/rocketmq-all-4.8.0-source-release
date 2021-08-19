@@ -243,8 +243,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     public void closeChannel(final String addr, final Channel channel) {
-        if (null == channel)
+        if (null == channel) {
             return;
+        }
 
         final String addrRemote = null == addr ? RemotingHelper.parseChannelRemoteAddr(channel) : addr;
 
@@ -292,8 +293,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     public void closeChannel(final Channel channel) {
-        if (null == channel)
+        if (null == channel) {
             return;
+        }
 
         try {
             if (this.lockChannelTables.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
